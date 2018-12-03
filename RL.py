@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Oct 16 20:31:54 2017
-
-@author: mlopes
-"""
+# 86411 - Filipe dos Santos Oliveira Marques - Grupo 97
 import numpy as np
 import random
 
@@ -20,7 +15,6 @@ class finiteMDP:
         self.P = P
         self.R = R
         self.absorv = absorv
-        # completar se necessario
 
 
     def runPolicy(self, n, x0,  poltype = 'greedy', polpar=[]):
@@ -62,23 +56,23 @@ class finiteMDP:
 
 
     def traces2Q(self, trace):
-        self.Q = np.zeros((self.nS, self.nA))
-
-        return self.Q
+        Q, gamma = self.Q, self.gamma
+        Q = np.zeros((self.nS, self.nA))
+        for l in trace:
+            s1, a1, sf, r  = int(l[0]), int(l[1]), int(l[2]), int(l[3])
+            # alpha = 1? idk
+            Q[s1][a1] = Q[s1][a1] + 1*(r + gamma*max(Q[sf]) - Q[s1][a1])
+        return Q
 
     def policy(self, x, poltype = 'exploration', par = []):
-        # implementar esta funcao
-
+        Q = self.Q
         if poltype == 'exploitation':
-            pass
-
+            a = 1
 
         elif poltype == 'exploration':
-            pass
+            a = np.argmax(Q[x,:])
 
-
-        return 1
+        return a
 
     def Q2pol(self, Q, eta=5):
-        # implementar esta funcao
         return np.exp(eta*Q)/np.dot(np.exp(eta*Q),np.array([[1,1],[1,1]]))
