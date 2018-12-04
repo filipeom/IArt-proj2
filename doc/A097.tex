@@ -1,4 +1,4 @@
-\documentclass[11pt, a4paper, twocolumn]{article}
+\documentclass[9pt, a4paper, twocolumn]{article}
 % Packeges
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -42,16 +42,21 @@
 \maketitle
 % Parte 1 - Inferência Exata em Redes Bayesianas
 \section{Parte 1}
-\hspace{10mm}Nesta secção vamos analisar a solução produzida para a primeira parte do segundo projeto da Unidade Curricular de Inteligência Artificial - Inferência Exata em Redes Bayesianas.
+\hspace{10mm}Nesta secção vamos analisar a solução produzida para a primeira parte do projeto - Inferência Exata em Redes Bayesianas.
 \subsection{Análise dos Resultados}
 \begin{figure}[h!]
 	\includegraphics[scale=.45]{images/bn-b.png}
 	\caption{Bayesian Network}
 	\label{fig:bn1}
 \end{figure}
-A Figura \ref{fig:bn1} mostra a rede bayesiana utilizada para testar o algoritmos produzidos. %TODO
+A Figura \ref{fig:bn1} mostra a rede bayesiana utilizada para testar o algoritmos produzidos. \\
+Os valores pedidos no enunciado foram todos calculados com sucesso e os resultados das \textit{queries} são:
+\begin{itemize}
+\item $P(B| j=t, m=t)=0.2842$
+\item $P(E| j=t, m=t)=0.176$
+\item $P(J| a=t, e=f)=0.900$
+\end{itemize}
 \subsection{Implementação}
-%TODO
 \subsubsection{Probabilidade Conjunta}
 \hspace{10mm}Para calcular a probabilidade conjunta temos de ter em conta algumas asserções em redes Bayesianas, nomeadamente que:
 \begin{itemize}
@@ -92,6 +97,7 @@ $P(B)\displaystyle\sum_{e}P(e)\displaystyle\sum_{a}P(A|B, e)P(m|A)P(j|A)$
 \end{center}
 Esta abordagem de calcular a probabilidade posterior é chamada de enumeração. Para calcular a probabilidade posterior usamos o algoritmo \emph{Enumeration-Ask}[pag.525 - AIMA]
 \begin{lstlisting}
+# Enumeration Ask
 def enumerationAsk(X, e, bn):
 	Q = [0, 0]
 	for xi in [0, 1]:
@@ -115,11 +121,19 @@ def enumerateAll(vars, e, bn):
 		return sumation
 \end{lstlisting}
 \subsection{Complexidade Computacional}
+\subsubsection{Probabilidade Conjunta}
+\hspace{10mm}Na tabela de probabilidade conjunta para um valor X com k \textit{parents} tem $2^k$ combinações de valores dos nós pais.
+E para cada probabilidade apenas é necessário armazenar o valor onde $X=true$(pois $X=false$ é apenas $1-valor\ de\ true$)
+Assim a complexidade para a tabela completa de probabilidade conjunta é:
+\begin{center}
+$O(2^n)$ Onde \textit{n} é o numero de nós na rede
+\end{center}
+\subsubsection{Probabilidade Posterior}
 %TODO
 
 % Parte 2 - Aprendizagem por Reforço
 \section{Parte 2}
-\hspace{10mm}Nesta secção vamos analisar a solução produzida para a segunda parte do segundo projeto da Unidade Curricular de Inteligência Artificial - Aprendizagem por Reforço.
+\hspace{10mm}Nesta secção vamos analisar a solução produzida para a segunda parte do projeto - Aprendizagem por Reforço.
 %TODO
 
 \end{document}
