@@ -39,7 +39,6 @@ def enumerateAll(variables, e, bn):
 
     rest = variables[1:]
     if isinstance(e[Y], int):
-        prob = node.computeProb(e)[e[Y]]
         return node.computeProb(e)[e[Y]]*enumerateAll(rest, e, bn)
     else:
         sumation = 0
@@ -47,7 +46,6 @@ def enumerateAll(variables, e, bn):
             # We copy the list for the same reason as the evidence
             # list in the enumeration ask algorithm
             e_y = e.copy()
-            prob = node.computeProb(e)[y]
             sumation += node.computeProb(e_y)[y]*enumerateAll(rest,extend(e_y, Y, y), bn)
         return sumation
 
