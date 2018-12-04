@@ -57,21 +57,18 @@ class finiteMDP:
 
     def traces2Q(self, trace):
         Q, gamma = self.Q, self.gamma
-        Q = np.zeros((self.nS, self.nA))
         for l in trace:
             s1, a1, sf, r  = int(l[0]), int(l[1]), int(l[2]), int(l[3])
             # alpha = 1? idk
-            Q[s1][a1] = Q[s1][a1] + 1*(r + gamma*max(Q[sf]) - Q[s1][a1])
+            Q[s1, a1] = Q[s1, a1] + 0.5*(r + gamma*max(Q[sf]) - Q[s1, a1])
         return Q
 
     def policy(self, x, poltype = 'exploration', par = []):
         Q = self.Q
         if poltype == 'exploitation':
-            a = 1
-
+            a = np.argmax(Q[x, :])
         elif poltype == 'exploration':
-            a = np.argmax(Q[x,:])
-
+            a = random.randint(0, len(Q[x])-1)
         return a
 
     def Q2pol(self, Q, eta=5):
