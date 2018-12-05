@@ -15,6 +15,7 @@ class finiteMDP:
         self.P = P
         self.R = R
         self.absorv = absorv
+        self.alpha = 0.5
 
 
     def runPolicy(self, n, x0,  poltype = 'greedy', polpar=[]):
@@ -56,11 +57,11 @@ class finiteMDP:
 
 
     def traces2Q(self, trace):
-        Q, gamma = self.Q, self.gamma
+        Q, gamma, alpha = self.Q, self.gamma, self.alpha
         for l in trace:
             s1, a1, sf, r  = int(l[0]), int(l[1]), int(l[2]), int(l[3])
             # alpha = 1? idk
-            Q[s1, a1] = Q[s1, a1] + 0.5*(r + gamma*max(Q[sf]) - Q[s1, a1])
+            Q[s1, a1] = Q[s1, a1] + alpha*(r + gamma*max(Q[sf]) - Q[s1, a1])
         return Q
 
     def policy(self, x, poltype = 'exploration', par = []):
