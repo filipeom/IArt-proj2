@@ -2,37 +2,12 @@
 % Packeges
 \usepackage{fancyhdr}
 \usepackage{graphicx}
-\usepackage{listings}
-\usepackage{color}
 
 % Fancy header package
 \pagestyle{fancy}
 \rhead{86411 - Filipe Marques - A097}
 \lhead{IArt - Projeto 2}
 
-% Color definitions
-\definecolor{dkgreen}{rgb}{0, 0.6, 0}
-\definecolor{gray}{rgb}{0.5, 0.5, 0.5}
-\definecolor{mauve}{rgb}{0.58, 0, 0.82}
-
-% Listings Settings
-\lstset{
-	frame=tb,
-	language=Python,
-	aboveskip=3mm,
-	belowskip=3mm,
-	showstringspaces=false,
-	columns=flexible,
-	basicstyle={\small\ttfamily},
-	numbers=none,
-	numberstyle=\tiny\color{grey},
-	keywordstyle=\color{blue},
-	commentstyle=\color{dkgreen},
-	stringstyle=\color{mauve},
-	breaklines=true,
-	breakatwhitespace=true,
-	tabsize=2
-}
 
 % Title
 \author{86411 - Filipe dos Santos Oliveira Marques}
@@ -67,16 +42,13 @@ Sabendo isto, podemos definir a probabilidade conjunta:
 \begin{center}
 $P(y_{1},...,y_{n}) = \displaystyle\prod_{i=1}^{n}P(y_{i}|Parents(y_{i}))$ 
 \end{center}
-Onde $Y = \{y_{1},..., y_{n}\}$ representa o conjunto de variáveis na rede Bayesiana.\\
-Em Python teriamos:
-\begin{lstlisting}
-# class BN
-def computeJointProb(self, evid):
-	p = 1
-	for i in range(len(self.prob)):
-		p*=self.prob[i].computeProb(evid)[evid[i]]
-	return p
-\end{lstlisting}
+Onde $Y = \{y_{1},..., y_{n}\}$ representa o conjunto de variáveis na rede Bayesiana.
+\begin{itemize}
+\item \textbf{Desvantagens desta abordagem:}
+\begin{itemize}
+\item Tamanho das tabelas de probabilidade conjunta é exponencial \emph{$O(2^n)$}.
+\end{itemize}
+\end{itemize}
 \subsubsection{Probabilidade Posterior}
 \hspace{10mm}Para calcular a probabilidade posterior podes usar a probabilidade condicional. Por exemplo, para calcular a probabilidade de haver um \textit{Burglar} sabendo que \textit{JohnCalls} e \textit{MaryCalls} temos:
 \begin{center}
@@ -95,41 +67,28 @@ Agrupando os fatores temos que:
 \begin{center}
 $P(B)\displaystyle\sum_{e}P(e)\displaystyle\sum_{a}P(A|B, e)P(m|A)P(j|A)$
 \end{center}
-Esta abordagem de calcular a probabilidade posterior é chamada de enumeração. Para calcular a probabilidade posterior usamos o algoritmo \emph{Enumeration-Ask}[pag.525 - AIMA]
-\begin{lstlisting}
-# Enumeration Ask
-def enumerationAsk(X, e, bn):
-	Q = [0, 0]
-	for xi in [0, 1]:
-		e_xi = e.copy()
-		Q[xi] = enumerateAll(bn.getVars(), extend(e_xi, X, xi), bn)
-	return [Q(0)/sum(Q), Q(1)/sum(Q)]
-	
-def enumerateAll(vars, e, bn):
-	if not vars: return 1
-	Y, node = vars[0], bn.getNode(Y)
-	rest = vars[1:]
-	if isinstance(e[y], int):
-		prob = node.computeProb(e)[e[Y]]
-		return prob*enumerateAll(rest, e, bn)
-	else:
-		sumation = 0
-		for y in [0, 1]:
-			e_y = e.copy()
-			prob = node.computeProb(e)[y]
-			sumation += prob*enumerateAll(rest, extend(e_y, Y, y), bn)
-		return sumation
-\end{lstlisting}
+Esta abordagem de calcular a probabilidade posterior é chamada de enumeração. Para calcular a probabilidade posterior usamos o algoritmo \emph{Enumeration-Ask}.
+\begin{itemize}
+\item \textbf{Vantagens desta abordagem:}
+\begin{itemize}
+\item Permite reduzir o custo de calcular as probabilidades fase à abordagem da probabilidade conjunta.
+\end{itemize}
+\item \textbf{Limitações:}
+\begin{itemize}
+\item Esta abordagem não é ótima visto alguns valores serem calculados várias vezes ao longo da computação da probabilidade posterior.
+\end{itemize}
+\end{itemize}
 \subsection{Complexidade Computacional}
 \subsubsection{Probabilidade Conjunta}
-\hspace{10mm}Na tabela de probabilidade conjunta para um valor X com k \textit{parents} tem $2^k$ combinações de valores dos nós pais.
-E para cada probabilidade apenas é necessário armazenar o valor onde $X=true$(pois $X=false$ é apenas $1-valor\ de\ true$)
-Assim a complexidade para a tabela completa de probabilidade conjunta é:
-\begin{center}
-$O(2^n)$ Onde \textit{n} é o numero de nós na rede
-\end{center}
+Um nó $X_{i}$ com $k$ nós pais vai ter $2^k$ linhas na sua
+tabela de probabilidade condicional.\\
+\\
+Cada linha vai guardar um valor $p$ para $X_{i}=t$. Assim para uma rede onde
+ cada nó não tem mais de $k$ nós pais, vamos precisar de $O(n2^k)$ números.
+Ao seja, cresce \textbf{\emph{linearmente}} com n (o número de nós na rede).
 \subsubsection{Probabilidade Posterior}
-%TODO
+Sabendo que a rede em estudo é \textit{\textbf{singly connected}}\footnote{Há no máximo uma ligação entre dois nós na rede.}, \textit{a complexidade espacial e temporal de inferência exata é linear com o tamanho da rede}.\footnote{AIMA, pag.528, cap.14.4.3.}\\\\
+Uma possível alternativa a este método seria: \textit{Variable Elimination} que permitiria fazer os cálculos uma vez e guardar para usar mais tarde quando forem necessários, melhorando assim substancialmente o algoritmo de enumeração.
 
 % Parte 2 - Aprendizagem por Reforço
 \section{Parte 2}
