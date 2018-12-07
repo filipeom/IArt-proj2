@@ -54,7 +54,7 @@ Onde $Y = \{y_{1},..., y_{n}\}$ representa o conjunto de variáveis na rede Baye
 \begin{center}
 $P(B|j=t, m=t)=\displaystyle\frac{P(B,j,m)}{P(j,m)}=\alpha P(B,j,m)$
 \end{center}
-Para calcular a probabilidade $P(B, j, m)$ temos somar as probabilidades conjuntas para todos os valores de '$e$' e '$a$' onde $j=t$ e $m=t$.\\
+Para calcular a probabilidade $P(B, j, m)$ temos de somar as probabilidades conjuntas para todos os valores de "$e$" e "$a$" onde $j=t$ e $m=t$.\\
 Assim:
 \begin{center}
 $P(B, j, m) = \displaystyle\sum_{e}\sum_{a}P(B, j, m, e, a)$
@@ -93,6 +93,86 @@ Uma possível alternativa a este método seria: \textit{Variable Elimination} qu
 % Parte 2 - Aprendizagem por Reforço
 \section{Parte 2}
 \hspace{10mm}Nesta secção vamos analisar a solução produzida para a segunda parte do projeto - Aprendizagem por Reforço.
-%TODO
-
+\subsection{Ambiente do Agente}
+\begin{figure}[h!]
+	\includegraphics[scale=.3]{images/ex1.png}
+	\caption{Ambiente 1}
+	\label{fig:ex1}
+\end{figure}
+\begin{figure}[h!]
+	\includegraphics[scale=.3]{images/ex2.png}
+	\caption{Ambiente 2}
+	\label{fig:ex1}
+\end{figure}
+\subsection{Função de Recompensa}
+\subsubsection{Ambiente 1}
+\hspace{10mm} Para os estados $\{0, 6\}$ observamos que a recompensa toma sempre o valor "1", para qualquer que seja a ação [0, 1]. Os restantes estados $\{1, 2, 3, 4, 5\}$, para qualquer ação [0, 1], o agente recebe sempre o valor "0". 
+\subsubsection{Ambiente 2}
+\hspace{10mm} Para o estado $\{7\}$ observamos que a recompensa toma sempre o valor "0", para qualquer que seja a ação [0, 1, 2, 3]. Os restantes estados $\{0, 1, 2, 3, 4, 5, 6\}$, para qualquer ação [0, 1, 2, 3], o agente recebe sempre o valor "-1".
+\subsection{Política Ótima}
+\hspace{10mm}Após a função Q ter convergido a política ótima pode ser obtida
+pela formula:
+\begin{center}
+$\displaystyle\pi^*(s) = max_{a'} Q^*(s, a')$
+\end{center}
+Ou seja, num estado $s$ é preferível escolher a ação $a'$ para qual o valor da função Q é maior, a este método chamamos de \textit{Exploitation}.
+\subsection{Movimento do Agente}
+\subsubsection{Ambiente 1}
+Neste Ambiente o movimento do agente é simples:
+\begin{itemize}
+\item \textbf{Estado 0}:
+\begin{itemize}
+\item \textbf{Ação 0}: Avançar para o estado 1.
+\item \textbf{Ação 1}: Ficar no mesmo estado.
+\end{itemize}
+\item \textbf{Estado $\{1, 2, 3, 4\}$}:
+\begin{itemize}
+\item \textbf{Ação 0}: Avançar para o próximo estado.
+\item \textbf{Ação 1}: Recuar para o estado anterior.
+\end{itemize}
+\item \textbf{Estado 5}: 
+\begin{itemize}
+\item \textbf{Ação 0}: Ficar no mesmo estado \textit{\textbf{OU}} avançar para o estado 6. (Escolha não determinista).
+\item \textbf{Ação 1}: Recuar para o estado anterior.
+\end{itemize}
+\item \textbf{Estado 6}:
+\begin{itemize}
+\item \textbf{Ação 0}: Ficar no mesmo estado.
+\item \textbf{Ação 1}: Recuar para o estado anterior
+\end{itemize}
+\end{itemize}
+\subsubsection{Ambiente 2}
+Sendo o movimento do deste ambiente mais complexo passo a descrever o movimento mais comum que pode ser executado em cada nó.
+\begin{itemize}
+\item Para cada estado o agente possui \textbf{4 ações} possíveis:
+\begin{itemize}
+\item Por norma o agente possui sempre duas ações em que pode ficar no mesmo estado(Sendo o estado 1 a exceção a esta regra).
+\item Em cada estado o agente possui uma ação para avançar e outra para recuar para um estado anterior.
+\begin{itemize}
+\item Sendo exceção o estado "0" que tem duas ações para avançar e o estado "7" que tem três ações para recuar.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\subsection{Análise dos Resultados}
+\hspace{10mm} O algoritmo implementado consegui passar aos testes disponibilizados com uma taxa de aprendizagem $\alpha = 0.1$.
+\subsection{Implementação}
+\hspace{10mm}Nesta secção vamos discutir a implementação das duas funções pedidas.
+\subsubsection{traces2Q}
+\hspace{10mm} Para esta função foi feito um ciclo que corria até a função Q convergir. Servindo-nos da formula da função Q:
+\begin{center}
+$Q[s, a] = Q[s, a] + \alpha (R + \gamma * argmax_{a'}Q[s, a'] - Q[s, a])$
+\end{center}
+Cada entrada da função \emph{Q[s, a]} foi preenchida e ao mesmo tempo calculada a normal da diferença entre a matrix da função \emph{Q} atual e da anterior, caso a diferença fosse menor que 0.00001 a função \emph{traces2Q} terminava pois considerámos que nessa altura a função \emph{Q} já convergiu.
+\subsubsection{policy}
+\hspace{10mm} Esta função foi simples de implementar visto apenas termos de escolher uma ação \emph{a} para o estado atual \emph{x}. A escolha da ação depende também da política escolhida:
+\begin{itemize}
+\item \emph{\textbf{Exploitation}}:
+\begin{itemize}
+\item Escolhemos a ação \emph{a} para qual \emph{Q[x, a]} é maximizado.
+\end{itemize}
+\item \emph{\textbf{Exploration}}:
+\begin{itemize}
+\item Escolhemos uma ação \emph{random} possível no estado \emph{x}.
+\end{itemize}
+\end{itemize}
 \end{document}

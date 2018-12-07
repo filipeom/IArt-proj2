@@ -1,0 +1,43 @@
+digraph G {
+	graph [layout=dot rankdir=LR]
+  
+  0 -> 1[color="cyan", label="0"];
+  0 -> 3[color="green", label="1"];
+  0 -> 0[color="purple", label="2"];
+  0 -> 0[color="pink", label="3"];
+
+  1 -> 2[color="cyan", label="0"];
+  1 -> 1[color="green", label="1"];
+  1 -> 7[color="purple", label="2"];
+  1 -> 0[color="pink", label="3"];
+
+  2 -> 2[color="cyan", label="0"];
+  2 -> 4[color="green", label="1"];
+  2 -> 2[color="purple", label="2"];
+  2 -> 1[color="pink", label="3"];
+
+  3 -> 3[color="cyan", label="0"];
+  3 -> 5[color="green", label="1"];
+  3 -> 0[color="purple", label="2"];
+  3 -> 3[color="pink", label="3"];
+  
+  4 -> 4[color="cyan", label="0"];
+  4 -> 7[color="green", label="1"];
+  4 -> 2[color="purple", label="2"];
+  4 -> 4[color="pink", label="3"];
+
+  5 -> 6[color="cyan", label="0"];
+  5 -> 5[color="green", label="1"];
+  5 -> 3[color="purple", label="2"];
+  5 -> 5[color="pink", label="3"];
+
+  6 -> 7[color="cyan", label="0"];
+  6 -> 6[color="green", label="1"];
+  6 -> 6[color="purple", label="2"];
+  6 -> 5[color="pink", label="3"];
+
+  7 -> 1[color="cyan", label="0"];
+  7 -> 7[color="green", label="0"];
+  7 -> 4[color="purple", label="0"];
+  7 -> 6[color="pink", label="0"];
+}
